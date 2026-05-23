@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fde68a"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="160" fill="url(#sky)"/>
+  <circle cx="320" cy="60" r="30" fill="#fef3c7"/>
+  <polygon points="0,160 80,90 140,140 220,80 300,150 400,100 400,160" fill="#0f172a"/>
+  <polygon points="0,170 60,130 130,160 200,120 280,170 400,140 400,250 0,250" fill="#1e293b"/>
+  <rect y="200" width="400" height="50" fill="#334155"/>
+  <rect y="220" width="400" height="6" fill="#fbbf24"/>
+  <g fill="#f8fafc">
+    <rect x="40" y="222" width="20" height="2"/>
+    <rect x="80" y="222" width="20" height="2"/>
+    <rect x="120" y="222" width="20" height="2"/>
+    <rect x="160" y="222" width="20" height="2"/>
+    <rect x="200" y="222" width="20" height="2"/>
+    <rect x="240" y="222" width="20" height="2"/>
+    <rect x="280" y="222" width="20" height="2"/>
+    <rect x="320" y="222" width="20" height="2"/>
+    <rect x="360" y="222" width="20" height="2"/>
+  </g>
+</svg>
