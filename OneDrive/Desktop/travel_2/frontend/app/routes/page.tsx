@@ -6,7 +6,12 @@ import { API_BASE } from "@/lib/config";
 async function getRoutes(): Promise<PopularRoute[]> {
   try {
     const base = API_BASE || "http://127.0.0.1:8000";
-    const res = await fetch(`${base}/api/routes`, { cache: "no-store" });
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(`${base}/api/routes`, {
+      next: { revalidate: 300 },
+      signal: controller.signal,
+    });
     if (!res.ok) return [];
     return res.json();
   } catch {

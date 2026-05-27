@@ -18,11 +18,17 @@ import { INR, type PopularRoute, type Vehicle, type Review } from "@/lib/api";
 async function safeFetch<T>(path: string, fallback: T): Promise<T> {
   try {
     const base = API_BASE || "http://127.0.0.1:8000";
-    const res = await fetch(`${base}${path}`, { cache: "no-store" });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000); // 8s timeout
+    const res = await fetch(`${base}${path}`, {
+      next: { revalidate: 300 }, // cache 5 min — fast for visitors
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
     if (!res.ok) return fallback;
     return (await res.json()) as T;
   } catch {
-    return fallback;
+    return fallback; // backend sleeping? show page anyway
   }
 }
 
@@ -33,9 +39,11 @@ const FALLBACK_REVIEWS: Review[] = [
 ];
 
 export default async function HomePage() {
-  const vehicles = await safeFetch<Vehicle[]>("/api/vehicles", []);
-  const routes   = await safeFetch<PopularRoute[]>("/api/routes", []);
-  const apiReviews = await safeFetch<Review[]>("/api/reviews", []);
+  const [vehicles, routes, apiReviews] = await Promise.all([
+    safeFetch<Vehicle[]>("/api/vehicles", []),
+    safeFetch<PopularRoute[]>("/api/routes", []),
+    safeFetch<Review[]>("/api/reviews", []),
+  ]);
   const reviews = apiReviews.length > 0 ? apiReviews.slice(0, 3) : FALLBACK_REVIEWS;
 
   return (
