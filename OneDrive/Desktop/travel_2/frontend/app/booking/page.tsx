@@ -13,6 +13,7 @@ import {
   FaCheckCircle,
   FaSpinner,
 } from "react-icons/fa";
+import LocationInput from "@/components/LocationInput";
 import {
   api,
   INR,
@@ -166,32 +167,26 @@ function BookingFlow() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="label">
-                  <FaMapMarkerAlt className="inline mr-1 text-brand-500" />{" "}
-                  Pickup Location
-                </label>
-                <input
-                  className="input"
-                  placeholder="e.g. MP Nagar, Bhopal"
-                  value={pickup}
-                  onChange={(e) => setPickup(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label className="label">
-                  <FaLocationArrow className="inline mr-1 text-brand-500" />{" "}
-                  Drop Location
-                </label>
-                <input
-                  className="input"
-                  placeholder="e.g. Indore"
-                  value={drop}
-                  onChange={(e) => setDrop(e.target.value)}
-                  required
-                />
-              </div>
+              <LocationInput
+                id="booking-pickup"
+                value={pickup}
+                onChange={setPickup}
+                placeholder="e.g. MP Nagar, Bhopal"
+                required
+                label={
+                  <><FaMapMarkerAlt className="inline mr-1 text-brand-500" /> Pickup Location</>
+                }
+              />
+              <LocationInput
+                id="booking-drop"
+                value={drop}
+                onChange={setDrop}
+                placeholder="e.g. Ujjain"
+                required
+                label={
+                  <><FaLocationArrow className="inline mr-1 text-brand-500" /> Drop Location</>
+                }
+              />
               <div>
                 <label className="label">
                   <FaCalendarAlt className="inline mr-1 text-brand-500" />{" "}

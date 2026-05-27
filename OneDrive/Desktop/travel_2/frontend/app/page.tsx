@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import BookingWidget from "@/components/BookingWidget";
 import { AGENCY, API_BASE } from "@/lib/config";
-import { INR, type PopularRoute, type Vehicle } from "@/lib/api";
+import { INR, type PopularRoute, type Vehicle, type Review } from "@/lib/api";
 
 async function safeFetch<T>(path: string, fallback: T): Promise<T> {
   try {
@@ -26,9 +26,17 @@ async function safeFetch<T>(path: string, fallback: T): Promise<T> {
   }
 }
 
+const FALLBACK_REVIEWS: Review[] = [
+  { id: 0, customer_name: "Ankit Sharma",  trip_description: "Bhopal → Indore (Sedan)",   rating: 5, comment: "Excellent service! Driver was on time and the car was very clean. Will book again.",                        created_at: "" },
+  { id: 0, customer_name: "Priya Verma",   trip_description: "Bhopal → Pachmarhi (Innova)", rating: 5, comment: "Smooth ride for our family trip. Fair pricing and very polite driver.",                                  created_at: "" },
+  { id: 0, customer_name: "Rahul Tiwari",  trip_description: "Corporate group (Tempo)",   rating: 5, comment: "Booked a Tempo Traveller for our office tour — comfortable and well managed.",                            created_at: "" },
+];
+
 export default async function HomePage() {
   const vehicles = await safeFetch<Vehicle[]>("/api/vehicles", []);
-  const routes = await safeFetch<PopularRoute[]>("/api/routes", []);
+  const routes   = await safeFetch<PopularRoute[]>("/api/routes", []);
+  const apiReviews = await safeFetch<Review[]>("/api/reviews", []);
+  const reviews = apiReviews.length > 0 ? apiReviews.slice(0, 3) : FALLBACK_REVIEWS;
 
   return (
     <>
@@ -45,7 +53,7 @@ export default async function HomePage() {
             </h1>
             <p className="mt-5 text-lg text-ink-100/85 max-w-xl">
               Book one-way, round-trip and local taxis from {AGENCY.name}.
-              Sedan, Innova and Tempo Traveller at transparent per-km pricing —
+              Dzire, Ertiga, Innova, Crysta and Tempo Traveller at transparent per-km pricing —
               available 24×7 across Madhya Pradesh.
             </p>
 
@@ -103,7 +111,7 @@ export default async function HomePage() {
               {
                 icon: <FaRupeeSign />,
                 t: "Transparent Pricing",
-                d: "No hidden charges. Fixed per-km rates for Sedan, Innova and Tempo Traveller.",
+                d: "No hidden charges. Fixed per-km rates for all vehicles — Dzire to Tempo Traveller.",
               },
               {
                 icon: <FaUserTie />,
@@ -145,7 +153,7 @@ export default async function HomePage() {
                 Choose your ride
               </h2>
               <p className="text-ink-500 mt-2">
-                Per-kilometre rates — Sedan ₹9, Innova ₹11, Tempo Traveller ₹15.
+                Per-km rates — Dzire ₹12 · Ertiga ₹14 · Innova ₹16 · Crysta ₹18 · Tempo 17 ₹25 · Tempo 26 ₹34 · Urbanaria ₹35.
               </p>
             </div>
             <Link href="/fleet" className="btn-secondary">
@@ -245,13 +253,23 @@ export default async function HomePage() {
                   key={r.id}
                   className="card hover:-translate-y-1 transition overflow-hidden p-0"
                 >
-                  <div className="aspect-[16/10] bg-brand-50 overflow-hidden">
+                  <div className="aspect-[16/10] relative overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/images/route-generic.svg"
+                      src={`/images/route-${r.destination.toLowerCase()}.png`}
                       alt={r.destination}
                       className="w-full h-full object-cover"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-4">
+                      <div>
+                        <div className="text-xs text-brand-300 font-semibold uppercase tracking-wider">
+                          {r.distance_km} km · ~{r.duration_hours.toFixed(1)} hrs
+                        </div>
+                        <div className="text-white font-display font-bold text-lg mt-0.5">
+                          {r.origin} → {r.destination}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between">
@@ -270,7 +288,7 @@ export default async function HomePage() {
                         <div className="font-semibold text-ink-900">
                           {INR(r.sedan_price)}
                         </div>
-                        <div className="text-ink-500">Sedan</div>
+                        <div className="text-ink-500">Dzire</div>
                       </div>
                       <div className="rounded-lg bg-ink-50 py-2">
                         <div className="font-semibold text-ink-900">
@@ -282,7 +300,7 @@ export default async function HomePage() {
                         <div className="font-semibold text-ink-900">
                           {INR(r.tempo_price)}
                         </div>
-                        <div className="text-ink-500">Tempo</div>
+                        <div className="text-ink-500">Tempo 17</div>
                       </div>
                     </div>
                     <Link
@@ -346,43 +364,39 @@ export default async function HomePage() {
       {/* Testimonials */}
       <section className="section">
         <div className="container-px">
-          <div className="text-center mb-12">
-            <span className="pill">Testimonials</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
-              What our customers say
-            </h2>
+          <div className="flex flex-wrap items-end justify-between gap-3 mb-12">
+            <div className="text-center sm:text-left">
+              <span className="pill">Customer Reviews</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
+                What our passengers say
+              </h2>
+            </div>
+            <Link href="/reviews" className="btn-secondary">
+              All Reviews &amp; Write a Review
+            </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                n: "Ankit Sharma",
-                c: "Bhopal → Indore (Sedan)",
-                m: "Excellent service! Driver was on time and the car was very clean. Will book again.",
-              },
-              {
-                n: "Priya Verma",
-                c: "Bhopal → Pachmarhi (Innova)",
-                m: "Smooth ride for our family trip. Fair pricing and very polite driver.",
-              },
-              {
-                n: "Rahul Tiwari",
-                c: "Corporate group (Tempo)",
-                m: "Booked a Tempo Traveller for our office tour — comfortable and well managed.",
-              },
-            ].map((t) => (
-              <div key={t.n} className="card">
+            {reviews.map((r, idx) => (
+              <div key={r.id || idx} className="card">
                 <div className="flex gap-1 text-brand-500">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <FaStar key={i} />
+                    <FaStar key={i} className={i < r.rating ? "text-brand-500" : "text-ink-200"} />
                   ))}
                 </div>
-                <p className="text-ink-700 mt-3">&ldquo;{t.m}&rdquo;</p>
+                <p className="text-ink-700 mt-3">&ldquo;{r.comment}&rdquo;</p>
                 <div className="mt-4">
-                  <div className="font-semibold">{t.n}</div>
-                  <div className="text-xs text-ink-500">{t.c}</div>
+                  <div className="font-semibold">{r.customer_name}</div>
+                  {r.trip_description && (
+                    <div className="text-xs text-ink-500">{r.trip_description}</div>
+                  )}
                 </div>
               </div>
             ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/reviews" className="btn-primary">
+              Read All Reviews &amp; Share Your Experience
+            </Link>
           </div>
         </div>
       </section>
@@ -399,7 +413,7 @@ export default async function HomePage() {
             </p>
             <ul className="mt-5 space-y-2 text-ink-100/85 text-sm">
               <li className="flex gap-2"><FaCheckCircle className="text-brand-400 mt-1"/> Instant fare estimate from real driving distance.</li>
-              <li className="flex gap-2"><FaCheckCircle className="text-brand-400 mt-1"/> Choose Sedan / Innova / Tempo Traveller.</li>
+              <li className="flex gap-2"><FaCheckCircle className="text-brand-400 mt-1"/> Choose from 8 vehicles — Dzire to 26-seater Tempo Traveller.</li>
               <li className="flex gap-2"><FaCheckCircle className="text-brand-400 mt-1"/> Pay only on completion — no upfront charges.</li>
             </ul>
           </div>

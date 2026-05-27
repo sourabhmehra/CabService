@@ -48,13 +48,23 @@ export default async function RoutesPage() {
           )}
           {routes.map((r) => (
             <div key={r.id} className="card overflow-hidden p-0 flex flex-col">
-              <div className="aspect-[16/10] bg-brand-50">
+              <div className="aspect-[16/10] relative overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/route-generic.svg"
+                  src={`/images/route-${r.destination.toLowerCase()}.png`}
                   alt={r.destination}
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-4">
+                  <div>
+                    <div className="text-xs text-brand-300 font-semibold uppercase tracking-wider">
+                      {r.distance_km} km · ~{r.duration_hours.toFixed(1)} hrs
+                    </div>
+                    <div className="text-white font-display font-bold text-xl mt-1">
+                      {r.origin} → {r.destination}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="p-5 flex flex-col flex-1">
                 <h3 className="font-display font-bold text-lg">
@@ -80,7 +90,7 @@ export default async function RoutesPage() {
                     <div className="font-semibold text-ink-900">
                       {INR(r.sedan_price)}
                     </div>
-                    <div className="text-ink-500">Sedan</div>
+                    <div className="text-ink-500">Dzire</div>
                   </div>
                   <div className="rounded-lg bg-ink-50 py-2">
                     <div className="font-semibold text-ink-900">
@@ -92,7 +102,7 @@ export default async function RoutesPage() {
                     <div className="font-semibold text-ink-900">
                       {INR(r.tempo_price)}
                     </div>
-                    <div className="text-ink-500">Tempo</div>
+                    <div className="text-ink-500">Tempo 17</div>
                   </div>
                 </div>
                 <Link

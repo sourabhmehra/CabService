@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -62,6 +62,18 @@ class ContactMessage(Base):
     phone = Column(String(20), nullable=True)
     subject = Column(String(200), nullable=True)
     message = Column(Text, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id = Column(Integer, primary_key=True, index=True)
+    customer_name = Column(String(120), nullable=False)
+    trip_description = Column(String(200), nullable=True)   # e.g. "Bhopal → Ujjain (Innova)"
+    rating = Column(Integer, nullable=False)                # 1–5
+    comment = Column(Text, nullable=False)
+    is_approved = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 

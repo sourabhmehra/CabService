@@ -125,6 +125,25 @@ class ContactOut(BaseModel):
         from_attributes = True
 
 
+class ReviewCreate(BaseModel):
+    customer_name: str = Field(min_length=2, max_length=120)
+    trip_description: Optional[str] = Field(default=None, max_length=200)
+    rating: int = Field(ge=1, le=5)
+    comment: str = Field(min_length=5)
+
+
+class ReviewOut(BaseModel):
+    id: int
+    customer_name: str
+    trip_description: Optional[str]
+    rating: int
+    comment: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class PopularRouteOut(BaseModel):
     id: int
     origin: str

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaMapMarkerAlt, FaLocationArrow, FaCalendarAlt, FaCar } from "react-icons/fa";
+import { FaLocationArrow, FaCalendarAlt, FaCar, FaMapMarkerAlt } from "react-icons/fa";
+import LocationInput from "@/components/LocationInput";
 
 const TRIP_TYPES = [
   { value: "oneway", label: "One Way" },
@@ -68,33 +69,27 @@ export default function BookingWidget({ compact = false }: { compact?: boolean }
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label className="label">
-            <FaMapMarkerAlt className="inline mr-1 text-brand-500" /> Pickup
-            Location
-          </label>
-          <input
-            className="input"
-            placeholder="e.g. MP Nagar, Bhopal"
-            value={pickup}
-            onChange={(e) => setPickup(e.target.value)}
-            required
-          />
-        </div>
+        <LocationInput
+          id="widget-pickup"
+          value={pickup}
+          onChange={setPickup}
+          placeholder="e.g. MP Nagar, Bhopal"
+          required
+          label={
+            <><FaMapMarkerAlt className="inline mr-1 text-brand-500" /> Pickup Location</>
+          }
+        />
 
-        <div>
-          <label className="label">
-            <FaLocationArrow className="inline mr-1 text-brand-500" /> Drop
-            Location
-          </label>
-          <input
-            className="input"
-            placeholder="e.g. Indore"
-            value={drop}
-            onChange={(e) => setDrop(e.target.value)}
-            required
-          />
-        </div>
+        <LocationInput
+          id="widget-drop"
+          value={drop}
+          onChange={setDrop}
+          placeholder="e.g. Ujjain"
+          required
+          label={
+            <><FaLocationArrow className="inline mr-1 text-brand-500" /> Drop Location</>
+          }
+        />
 
         <div>
           <label className="label">

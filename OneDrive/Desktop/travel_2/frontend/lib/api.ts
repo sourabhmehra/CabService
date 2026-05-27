@@ -49,6 +49,15 @@ export type PopularRoute = {
   description?: string | null;
 };
 
+export type Review = {
+  id: number;
+  customer_name: string;
+  trip_description?: string | null;
+  rating: number;
+  comment: string;
+  created_at: string;
+};
+
 export type Booking = {
   id: number;
   reference: string;
@@ -116,6 +125,17 @@ export const api = {
     }),
   getBooking: (reference: string) =>
     request<Booking>(`/api/bookings/${reference}`),
+  reviews: () => request<Review[]>("/api/reviews"),
+  createReview: (payload: {
+    customer_name: string;
+    trip_description?: string;
+    rating: number;
+    comment: string;
+  }) =>
+    request<Review>("/api/reviews", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
   contact: (payload: {
     name: string;
     email?: string;

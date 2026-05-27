@@ -176,6 +176,31 @@ def list_bookings(db: Session = Depends(get_db)):
     )
 
 
+@app.post("/api/reviews", response_model=schemas.ReviewOut, status_code=status.HTTP_201_CREATED)
+def create_review(payload: schemas.ReviewCreate, db: Session = Depends(get_db)):
+    review = models.Review(
+        customer_name=payload.customer_name.strip(),
+        trip_description=payload.trip_description.strip() if payload.trip_description else None,
+        rating=payload.rating,
+        comment=payload.comment.strip(),
+    )
+    db.add(review)
+    db.commit()
+    db.refresh(review)
+    return review
+
+
+@app.get("/api/reviews", response_model=List[schemas.ReviewOut])
+def list_reviews(db: Session = Depends(get_db)):
+    return (
+        db.query(models.Review)
+        .filter(models.Review.is_approved == True)
+        .order_by(models.Review.created_at.desc())
+        .limit(50)
+        .all()
+    )
+
+
 @app.post("/api/contact", response_model=schemas.ContactOut, status_code=status.HTTP_201_CREATED)
 def create_contact(payload: schemas.ContactCreate, db: Session = Depends(get_db)):
     msg = models.ContactMessage(
