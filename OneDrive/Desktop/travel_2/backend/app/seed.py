@@ -162,6 +162,30 @@ ROUTES_DATA = [
 ]
 
 
+# Old slugs that must be removed and their replacement slug
+# Bookings are re-assigned to the replacement so no data is lost.
+LEGACY_SLUG_MAP = {
+    "sedan": "dzire",
+    "etios": "dzire",
+    "innova-hycross": "innova-crysta",
+}
+
+
+def _migrate_legacy(db: Session) -> None:
+    """Force-remove retired vehicle slugs; re-assign their bookings."""
+    for old_slug, new_slug in LEGACY_SLUG_MAP.items():
+        old = db.query(models.Vehicle).filter_by(slug=old_slug).first()
+        if not old:
+            continue
+        new = db.query(models.Vehicle).filter_by(slug=new_slug).first()
+        if new:
+            db.query(models.Booking).filter_by(vehicle_id=old.id).update(
+                {"vehicle_id": new.id}, synchronize_session=False
+            )
+        db.delete(old)
+    db.commit()
+
+
 def seed_vehicles(db: Session) -> None:
     """Upsert all vehicles; remove old slugs that have no bookings."""
     valid_slugs = [v["slug"] for v in VEHICLES_DATA]
@@ -219,4 +243,5 @@ def seed_routes(db: Session) -> None:
 
 def run_seed(db: Session) -> None:
     seed_vehicles(db)
+    _migrate_legacy(db)   # force-remove old slugs like "sedan", "etios"
     seed_routes(db)
