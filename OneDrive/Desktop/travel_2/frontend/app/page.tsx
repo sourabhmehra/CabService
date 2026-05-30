@@ -409,6 +409,48 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Cities We Serve — keyword rich for SEO */}
+      <section className="section bg-ink-50">
+        <div className="container-px">
+          <div className="text-center mb-8">
+            <span className="pill">Service Area</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
+              Outstation Taxi from Bhopal
+            </h2>
+            <p className="text-ink-500 mt-2 max-w-2xl mx-auto">
+              We operate outstation cab service from Bhopal to all major cities and pilgrimage sites in Madhya Pradesh and beyond.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {[
+              { city: "Ujjain", km: "190 km" },
+              { city: "Indore", km: "195 km" },
+              { city: "Pachmarhi", km: "210 km" },
+              { city: "Omkareshwar", km: "275 km" },
+              { city: "Khajuraho", km: "375 km" },
+              { city: "Sanchi", km: "46 km" },
+              { city: "Bhimbetka", km: "45 km" },
+              { city: "Jabalpur", km: "320 km" },
+              { city: "Gwalior", km: "415 km" },
+              { city: "Orchha", km: "340 km" },
+              { city: "Mandla", km: "280 km" },
+              { city: "Amarkantak", km: "400 km" },
+            ].map((r) => (
+              <Link
+                key={r.city}
+                href={`/booking?pickup=${encodeURIComponent("Bhopal")}&drop=${encodeURIComponent(r.city)}`}
+                className="flex items-center justify-between rounded-xl border border-ink-200 bg-white px-4 py-3 hover:border-brand-400 hover:bg-brand-50 transition group"
+              >
+                <span className="font-medium text-ink-800 group-hover:text-brand-700">
+                  Bhopal → {r.city}
+                </span>
+                <span className="text-xs text-ink-400">{r.km}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="section bg-ink-900 text-white">
         <div className="container-px grid md:grid-cols-2 items-center gap-8">
