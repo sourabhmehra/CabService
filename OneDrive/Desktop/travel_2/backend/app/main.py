@@ -43,6 +43,7 @@ def _gen_reference() -> str:
 
 
 @app.get("/")
+@app.head("/")
 def root():
     return {
         "agency": "Mehra Tour and Travel",
@@ -50,6 +51,12 @@ def root():
         "status": "ok",
         "docs": "/docs",
     }
+
+
+@app.get("/health")
+@app.head("/health")
+def health():
+    return {"status": "ok"}
 
 
 @app.get("/api/vehicles", response_model=List[schemas.VehicleOut])
